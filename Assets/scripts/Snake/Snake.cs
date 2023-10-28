@@ -10,11 +10,11 @@ public class Snake : MonoBehaviour
     private float gridMoveTimeMax;
     [SerializeField] private LevelGrid levelGrid;
     private int snakeBodySize;
-    private List<Vector2Int> snakeMovePositionList;
+    private List<SnakeBody> snakeBodyList;
 
     public Snake() {
         snakeBodySize = 3;
-        snakeMovePositionList = new List<Vector2Int>();
+        snakeBodyList = new List<SnakeBody>();
     }
     public void LevelGridSetup(LevelGrid levelGrid)
     {
@@ -45,17 +45,18 @@ public class Snake : MonoBehaviour
             {
                 snakeBodySize++;
             }
-            snakeMovePositionList.Insert(0, gridPosition);
+            snakeBodyList.Insert(0,new SnakeBody( gridPosition , gridMoveDirection));
             gridMoveTimer -= gridMoveTimeMax;
 
-            if (snakeMovePositionList.Count >= snakeBodySize + 1)
+            if (snakeBodyList.Count >= snakeBodySize + 1)
             {
-                snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
+                snakeBodyList.RemoveAt(snakeBodyList.Count - 1);
             }
-            for (int i = 0; i < snakeMovePositionList.Count; i++)
+            for (int i = 1; i < snakeBodyList.Count; i++)
             {
-                Vector2Int snakeMovePosition = snakeMovePositionList[i];
+                Vector2Int snakeMovePosition = snakeBodyList[i].Position;
                 GameObject body = CreateBody(snakeMovePosition);
+                body.transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(snakeBodyList[i].Direction) - 90);
                 StartCoroutine(DestroyBody(body));
             }
         }
@@ -149,7 +150,20 @@ public class Snake : MonoBehaviour
 
     public List<Vector2Int> GetFullSnakeGridPositionList(){
         List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
-        gridPositionList.AddRange(snakeMovePositionList);
+        //gridPositionList.AddRange(snakeBodyList);
         return gridPositionList;
     }
+}
+
+public class SnakeBody
+{
+    public Vector2Int Position { get; set; }
+    public Vector2Int Direction { get; set; }
+    public SnakeBody() { }
+    public SnakeBody(Vector2Int position, Vector2Int direction) 
+    {
+        this.Position = position;
+        this.Direction = direction;
+    }
+
 }

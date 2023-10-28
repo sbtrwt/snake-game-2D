@@ -325,9 +325,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9a6387f03c2bb42b4cfb2bda28dec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeHeadSprite: {fileID: -2775109236177576168, guid: 818b9233412c1454e961cb6b01ea54bb, type: 3}
+  snakeHeadSprite: {fileID: 918735527867113121, guid: bc333cf734fe218468583c07570b5dd3, type: 3}
   foodSprite: {fileID: 5362735838549604449, guid: 39afff79050b63e4dba1b01f5ab26d06, type: 3}
-  bodySprite: {fileID: 894344163014251334, guid: a9f7f18ffad9b9244bd5b087ac1329af, type: 3}
+  bodySprite: {fileID: 7267237824351808007, guid: fee612480f17b0f4081a194aa88fd838, type: 3}
   cornerBodySprite: {fileID: 0}
 --- !u!4 &1056971692
 Transform:
