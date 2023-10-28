@@ -8,13 +8,15 @@ public class Snake : MonoBehaviour
     private Vector2Int gridMoveDirection;
     private float gridMoveTimer;
     private float gridMoveTimeMax;
-    
+    [SerializeField]  private LevelGrid levelGrid;
+    public void LevelGridSetup(LevelGrid levelGrid) 
+    {
+        this.levelGrid = levelGrid;
+    }
     private void Awake()
     {
-        gridPosition = new Vector2Int(0, 0);
-        gridMoveTimeMax = 0.4f;
-        gridMoveTimer = gridMoveTimeMax;
-        gridMoveDirection = new Vector2Int(1, 0);
+        InitPosition();
+        gameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.snakeHeadSprite;
     }
 
     private void Update()
@@ -35,6 +37,8 @@ public class Snake : MonoBehaviour
 
         transform.position = new Vector3(gridPosition.x, gridPosition.y);
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirection) - 90);
+
+        levelGrid.SnakeMoved(gridPosition);
     }
 
     private void HandleInput()
@@ -85,5 +89,22 @@ public class Snake : MonoBehaviour
         float n = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         if (n < 0) n += 360;
         return n;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Food"))
+        {
+            Debug.Log("Food");
+            GameHandler.Instance.TakeFood();
+        }
+    }
+
+    private void InitPosition()
+    {
+        gridPosition = new Vector2Int(16, 9);
+        gridMoveTimeMax = 0.4f;
+        gridMoveTimer = gridMoveTimeMax;
+        gridMoveDirection = new Vector2Int(1, 0);
     }
 }
