@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGrid 
+public class LevelGrid
 {
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
@@ -14,11 +14,16 @@ public class LevelGrid
     {
         this.width = width;
         this.height = height;
-        Debug.Log("level started"); 
+        Debug.Log("level started");
     }
 
-    public void SpawnFood() {
-        foodGridPosition = new Vector2Int(Random.Range(5, width), Random.Range(5, height));
+    public void SpawnFood()
+    {
+
+        do
+        {
+            foodGridPosition = new Vector2Int(Random.Range(5, width), Random.Range(5, height));
+        } while (snake.GetFullSnakeGridPositionList().IndexOf(foodGridPosition) != -1);
 
         foodGameObject = new GameObject("Food", typeof(SpriteRenderer));
         foodGameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.foodSprite;
@@ -28,13 +33,15 @@ public class LevelGrid
     }
 
 
-    public void SnakeMoved(Vector2Int snakeGridPosition)
+    public bool IsSnakeTookFood(Vector2Int snakeGridPosition)
     {
-        if(snakeGridPosition == foodGridPosition)
+        if (snakeGridPosition == foodGridPosition)
         {
             Object.Destroy(foodGameObject);
             SpawnFood();
+            return true;
         }
+        return false;
     }
 
     public void SnakeSetup(Snake snake)

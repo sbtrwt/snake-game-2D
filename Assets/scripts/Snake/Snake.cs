@@ -8,13 +8,21 @@ public class Snake : MonoBehaviour
     private Vector2Int gridMoveDirection;
     private float gridMoveTimer;
     private float gridMoveTimeMax;
-    [SerializeField]  private LevelGrid levelGrid;
-    public void LevelGridSetup(LevelGrid levelGrid) 
+    [SerializeField] private LevelGrid levelGrid;
+    private int snakeBodySize;
+    private List<Vector2Int> snakeMovePositionList;
+
+    public Snake() {
+        snakeBodySize = 3;
+        snakeMovePositionList = new List<Vector2Int>();
+    }
+    public void LevelGridSetup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
     }
     private void Awake()
     {
+        
         InitPosition();
         gameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.snakeHeadSprite;
     }
@@ -32,13 +40,30 @@ public class Snake : MonoBehaviour
         if (gridMoveTimer > gridMoveTimeMax)
         {
             gridPosition += gridMoveDirection;
+
+            if (levelGrid.IsSnakeTookFood(gridPosition))
+            {
+                snakeBodySize++;
+            }
+            snakeMovePositionList.Insert(0, gridPosition);
             gridMoveTimer -= gridMoveTimeMax;
+
+            if (snakeMovePositionList.Count >= snakeBodySize + 1)
+            {
+                snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
+            }
+            for (int i = 0; i < snakeMovePositionList.Count; i++)
+            {
+                Vector2Int snakeMovePosition = snakeMovePositionList[i];
+                GameObject body = CreateBody(snakeMovePosition);
+                StartCoroutine(DestroyBody(body));
+            }
         }
 
         transform.position = new Vector3(gridPosition.x, gridPosition.y);
         transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirection) - 90);
 
-        levelGrid.SnakeMoved(gridPosition);
+
     }
 
     private void HandleInput()
@@ -91,20 +116,40 @@ public class Snake : MonoBehaviour
         return n;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Food"))
-        {
-            Debug.Log("Food");
-            GameHandler.Instance.TakeFood();
-        }
-    }
-
     private void InitPosition()
     {
         gridPosition = new Vector2Int(16, 9);
         gridMoveTimeMax = 0.4f;
         gridMoveTimer = gridMoveTimeMax;
         gridMoveDirection = new Vector2Int(1, 0);
+    }
+
+    public Vector2Int GetGridPosition()
+    {
+        return gridPosition;
+    }
+
+    private GameObject CreateBody(Vector2Int position)
+    {
+        var snakeBody = new GameObject();
+
+        SpriteRenderer snakeSpriteRenderer = snakeBody.AddComponent<SpriteRenderer>();
+        snakeSpriteRenderer.sprite = GameAssets.Instance.bodySprite;
+        snakeBody.transform.position = new Vector3(position.x, position.y);
+        //snakeBody.transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(position) - 90);
+        snakeBody.layer = 1;
+        return snakeBody;
+    }
+
+    private IEnumerator DestroyBody(GameObject body)
+    {
+        yield return new WaitForSeconds(gridMoveTimeMax);
+        Destroy(body);
+    }
+
+    public List<Vector2Int> GetFullSnakeGridPositionList(){
+        List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
+        gridPositionList.AddRange(snakeMovePositionList);
+        return gridPositionList;
     }
 }

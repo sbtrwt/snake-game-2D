@@ -21,22 +21,20 @@ public class GameHandler : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void Start()
     {
         snake = new Snake();
-        levelGrid = new LevelGrid(28, 14);
-
+        InitLevelGrid();
         InitSnake();
         levelGrid.SpawnFood();
         
     }
-
-    public void TakeFood() {
-        //levelGrid.SnakeMoved(new Vector2Int((int)snake.transform.position.x, (int) snake.transform.position.y));
+    private void InitLevelGrid() 
+    {
+        levelGrid = new LevelGrid(28, 14);
+        levelGrid.SnakeSetup(snake);
     }
-
-    public void InitSnake() {
+    private void InitSnake() {
         snakeHead = new GameObject();
 
         SpriteRenderer snakeSpriteRenderer = snakeHead.AddComponent<SpriteRenderer>();
