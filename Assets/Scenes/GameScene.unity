@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9a6387f03c2bb42b4cfb2bda28dec8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeHeadSprite: {fileID: 918735527867113121, guid: bc333cf734fe218468583c07570b5dd3, type: 3}
+  snakeHeadSprite: {fileID: -2475425771593899848, guid: 6b3230c403bb65b4f8c7b79e4e245dfc, type: 3}
   foodSprite: {fileID: 5362735838549604449, guid: 39afff79050b63e4dba1b01f5ab26d06, type: 3}
   bodySprite: {fileID: 7267237824351808007, guid: fee612480f17b0f4081a194aa88fd838, type: 3}
   cornerBodySprite: {fileID: 0}
