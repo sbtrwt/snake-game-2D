@@ -48,4 +48,25 @@ public class LevelGrid
     {
         this.snake = snake;
     }
+
+    public Vector2Int ValidateGridPosition(Vector2Int gridPosition)
+    {
+        if (gridPosition.x < 0)
+        {
+            gridPosition.x = width - 1;
+        }
+        if (gridPosition.x > width)
+        {
+            gridPosition.x =  1;
+        }
+        if (gridPosition.y < 0)
+        {
+            gridPosition.y = height - 1;
+        }
+        if (gridPosition.y > height)
+        {
+            gridPosition.y = 1;
+        }
+        return gridPosition;
+    }
 }
