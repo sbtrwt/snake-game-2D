@@ -30,6 +30,7 @@ public class Snake : MonoBehaviour
     private List<SnakeBodyPart> snakeBodyList;
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
+    public GameObject gameOverController;
     public Snake() {
         snakeBodySize = 3;
         snakeMovePositionList = new List<SnakeMovePosition>();
@@ -104,6 +105,7 @@ public class Snake : MonoBehaviour
                 {
                     Debug.Log("Game Over");
                     state = State.Dead;
+                    gameOverController.SetActive(true);
                 }
             }
         }

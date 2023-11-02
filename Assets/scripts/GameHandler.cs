@@ -9,12 +9,13 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private GameObject snakeHead;
     [SerializeField] private Snake snake;
     public ScoreController scoreController;
+    public GameObject gameOverController;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -42,5 +43,6 @@ public class GameHandler : MonoBehaviour
         snake =  snakeHead.AddComponent<Snake>() ;
         snake.LevelGridSetup(levelGrid);
         snake.scoreController = scoreController;
+        snake.gameOverController = gameOverController;
     }
 }
