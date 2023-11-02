@@ -8,7 +8,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField]private LevelGrid levelGrid;
     [SerializeField] private GameObject snakeHead;
     [SerializeField] private Snake snake;
-
+    public ScoreController scoreController;
     private void Awake()
     {
         if (Instance == null)
@@ -41,5 +41,6 @@ public class GameHandler : MonoBehaviour
         snakeSpriteRenderer.sprite = GameAssets.Instance.snakeHeadSprite;
         snake =  snakeHead.AddComponent<Snake>() ;
         snake.LevelGridSetup(levelGrid);
+        snake.scoreController = scoreController;
     }
 }

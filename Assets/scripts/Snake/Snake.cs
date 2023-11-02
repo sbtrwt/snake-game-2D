@@ -29,6 +29,7 @@ public class Snake : MonoBehaviour
     private int snakeBodySize;
     private List<SnakeBodyPart> snakeBodyList;
     private List<SnakeMovePosition> snakeMovePositionList;
+    public ScoreController scoreController;
     public Snake() {
         snakeBodySize = 3;
         snakeMovePositionList = new List<SnakeMovePosition>();
@@ -80,6 +81,7 @@ public class Snake : MonoBehaviour
             {
                 snakeBodySize++;
                 CreateSnakeBodyPart();
+                scoreController.AddScore(10);
             }
           
             gridMoveTimer -= gridMoveTimeMax;
