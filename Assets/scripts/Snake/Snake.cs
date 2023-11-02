@@ -17,7 +17,8 @@ public class Snake : MonoBehaviour
     private enum State
     {
         Alive,
-        Dead
+        Dead,
+        Pause
     }
 
     private State state;
@@ -57,6 +58,8 @@ public class Snake : MonoBehaviour
                 HandleGridMovement();
                 break;
             case State.Dead:
+                break;
+            case State.Pause:
                 break;
         }
         
@@ -208,6 +211,14 @@ public class Snake : MonoBehaviour
         return gridPositionList;
     }
 
+    public void SetPause() 
+    {
+        state = State.Pause;
+    }
+    public void SetResume()
+    {
+        state = State.Alive;
+    }
     private class SnakeMovePosition
     {
         private Vector2Int gridPosition;
