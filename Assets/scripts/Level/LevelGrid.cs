@@ -53,19 +53,19 @@ public class LevelGrid
     {
         if (gridPosition.x < 0)
         {
-            gridPosition.x = width - 1;
+            gridPosition.x = width ;
         }
         if (gridPosition.x > width)
         {
-            gridPosition.x =  1;
+            gridPosition.x =  0;
         }
         if (gridPosition.y < 0)
         {
-            gridPosition.y = height - 1;
+            gridPosition.y = height ;
         }
         if (gridPosition.y > height)
         {
-            gridPosition.y = 1;
+            gridPosition.y = 0;
         }
         return gridPosition;
     }
