@@ -7,8 +7,12 @@ public class GameAssets : MonoBehaviour
     public static GameAssets Instance { get; private set; }
     public Sprite snakeHeadSprite;
     public Sprite foodSprite;
+    public Sprite poisonSprite;
     public Sprite bodySprite;
-    public Sprite cornerBodySprite;
+    public Sprite shieldPowerSprite;
+    public Sprite scoreBoostPowerSprite;
+    public Sprite speedUpPowerSprite;
+
     private void Awake()
     {
         if (Instance == null)

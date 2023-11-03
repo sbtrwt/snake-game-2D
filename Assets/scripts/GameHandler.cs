@@ -32,6 +32,7 @@ public class GameHandler : MonoBehaviour
         InitSnake();
         levelGrid.SnakeSetup(snake);
         levelGrid.SpawnFood();
+        levelGrid.SpawnPower();
         resumeButton.onClick.AddListener(OnClickResume);
         pauseButton.onClick.AddListener(OnClickPause);
     }

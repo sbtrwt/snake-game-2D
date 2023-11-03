@@ -44,21 +44,22 @@ public class LevelGrid
 
         } while (snake.GetFullSnakeGridPositionList().IndexOf(position) != -1);
 
-        int power = Random.Range(1, 3);
+        int power = Random.Range(1, 4);
         PowerUp powerUp = PowerUp.None;
         switch (power)
         {
             case 1:
-                powerUp = PowerUp.ScoreBoost;
+                powerUp = PowerUp.Shield;
                 break;
             case 2:
-                powerUp = PowerUp.Shield;
+                powerUp = PowerUp.ScoreBoost;
                 break;
             case 3:
                 powerUp = PowerUp.SpeedUp;
                 break;
         }
         powerGridPosition = new PowerGridPosition(position, powerUp);
+        powerGridPosition.CreatePower();
         //foodGameObject.tag = "Food";
     }
 
@@ -71,6 +72,16 @@ public class LevelGrid
             return true;
         }
         return false;
+    }
+
+    public PowerUp IsSnakeTookPower(Vector2Int snakeGridPosition)
+    {
+        if (snakeGridPosition == powerGridPosition.GetGridPosition())
+        {
+            powerGridPosition.DestroyPower();
+            return powerGridPosition.GetPowerType();
+        }
+        return PowerUp.None;
     }
 
     public void SnakeSetup(Snake snake)
@@ -113,9 +124,37 @@ public class LevelGrid
         public void CreatePower() 
         {
             powerGameObject = new GameObject("Power", typeof(SpriteRenderer));
-            powerGameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.foodSprite;
+            var spriteRenderer = powerGameObject.GetComponent<SpriteRenderer>();
+          
+            switch (power)
+            {
+                case PowerUp.Shield:
+                    spriteRenderer.sprite = GameAssets.Instance.shieldPowerSprite;
+                    break;
+                case PowerUp.ScoreBoost:
+                    spriteRenderer.sprite = GameAssets.Instance.scoreBoostPowerSprite;
+                    break;
+                case PowerUp.SpeedUp:
+                    spriteRenderer.sprite = GameAssets.Instance.speedUpPowerSprite;
+                    break;
+            }
+          
             powerGameObject.transform.position = new Vector3(gridPosition.x, gridPosition.y);
             powerGameObject.layer = 6;
+        }
+
+        public void DestroyPower() 
+        {
+            Object.Destroy(powerGameObject);
+        }
+
+        public PowerUp GetPowerType()
+        {
+            return power;
+        }
+        public Vector2Int GetGridPosition()
+        {
+            return gridPosition;
         }
     }
 }
