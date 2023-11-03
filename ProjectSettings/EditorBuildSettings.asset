@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/SingleGameScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/CoGameScene.unity
-    guid: f074f6b4cc33ca9458bb620f37499594
+    path: Assets/Scenes/CoOpGameScene.unity
+    guid: c8c236396c4373240bf0633f799d924c
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -10,16 +10,21 @@ public enum PowerUp
     ScoreBoost,
     SpeedUp
 }
-
+public enum Direction
+{
+    Left,
+    Right,
+    Up,
+    Down
+}
+public enum PlayerType
+{
+    One,
+    Two
+}
 public class Snake : MonoBehaviour
 {
-    private enum Direction
-    {
-        Left,
-        Right,
-        Up,
-        Down
-    }
+    
     private enum State
     {
         Alive,
@@ -40,11 +45,8 @@ public class Snake : MonoBehaviour
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
     public GameObject gameOverController;
-    
-    public void LevelGridSetup(LevelGrid levelGrid)
-    {
-        this.levelGrid = levelGrid;
-    }
+    private PlayerType playerType;
+ 
     private void Awake()
     {
         snakeBodySize = 3;
@@ -54,6 +56,7 @@ public class Snake : MonoBehaviour
         gameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.snakeHeadSprite;
         state = State.Alive;
         powerUp = PowerUp.None;
+        playerType = PlayerType.One;
     }
 
     private void Update()
@@ -69,6 +72,10 @@ public class Snake : MonoBehaviour
                 break;
         }
         
+    }
+    public void LevelGridSetup(LevelGrid levelGrid)
+    {
+        this.levelGrid = levelGrid;
     }
     private void HandleCoreAction() 
     {
@@ -168,7 +175,7 @@ public class Snake : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.UpArrow : KeyCode.W))
         {
             if (Direction.Down != gridMoveDirection)
             {
@@ -176,7 +183,7 @@ public class Snake : MonoBehaviour
             }
             //gridPosition.y += 1;
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.DownArrow : KeyCode.S ))
         {
             if (Direction.Up != gridMoveDirection)
             {
@@ -184,7 +191,7 @@ public class Snake : MonoBehaviour
             }
             //gridPosition.y -= 1;
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.LeftArrow : KeyCode.A ))
         {
             if (Direction.Right != gridMoveDirection)
             {
@@ -192,7 +199,7 @@ public class Snake : MonoBehaviour
             }
             //gridPosition.x -= 1;
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.RightArrow : KeyCode.D ))
         {
             if (Direction.Left != gridMoveDirection)
             {
@@ -303,6 +310,11 @@ public class Snake : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         levelGrid.SpawnPower();
+    }
+
+    public void SetSnakeType(PlayerType type)
+    {
+        playerType = type;
     }
     private class SnakeMovePosition
     {

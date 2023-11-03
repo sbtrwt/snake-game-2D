@@ -9,11 +9,13 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private LevelGrid levelGrid;
     [SerializeField] private GameObject snakeHead;
     [SerializeField] private Snake snake;
-    public ScoreController scoreController;
-    public GameObject gameOverController;
-    public GameObject resumeController;
-    public Button resumeButton;
-    public Button pauseButton;
+    [SerializeField] private ScoreController scoreController;
+    [SerializeField] private GameObject gameOverController;
+    [SerializeField] private GameObject resumeController;
+    [SerializeField] private Button resumeButton;
+    [SerializeField] private Button pauseButton;
+    [SerializeField] private PlayerType playerType;
+    [SerializeField] private Color playerColor;
     private void Awake()
     {
         if (Instance == null)
@@ -23,7 +25,7 @@ public class GameHandler : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
     }
     private void Start()
@@ -52,13 +54,15 @@ public class GameHandler : MonoBehaviour
        
     }
     private void InitSnake() {
-        snakeHead = new GameObject();
+        snakeHead = new GameObject("SnakeHead" + playerType);
 
         SpriteRenderer snakeSpriteRenderer = snakeHead.AddComponent<SpriteRenderer>();
         snakeSpriteRenderer.sprite = GameAssets.Instance.snakeHeadSprite;
-        snake =  snakeHead.AddComponent<Snake>() ;
+        snakeSpriteRenderer.color = playerColor;
+         snake =  snakeHead.AddComponent<Snake>() ;
         snake.LevelGridSetup(levelGrid);
         snake.scoreController = scoreController;
         snake.gameOverController = gameOverController;
+        snake.SetSnakeType(playerType);
     }
 }
