@@ -5,7 +5,10 @@ using UnityEngine;
 public class GameAssets : MonoBehaviour
 {
     public static GameAssets Instance { get; private set; }
-
+    public Sprite snakeHeadSprite;
+    public Sprite foodSprite;
+    public Sprite bodySprite;
+    public Sprite cornerBodySprite;
     private void Awake()
     {
         if (Instance == null)
@@ -19,8 +22,7 @@ public class GameAssets : MonoBehaviour
         }
     }
 
-    public Sprite snakeHeadSprite;
-
+   
 
 
 }
