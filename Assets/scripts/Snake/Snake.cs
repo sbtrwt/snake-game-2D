@@ -3,7 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+public enum PowerUp
+{
+    None,
+    Shield,
+    ScoreBoost,
+    SpeedUp
+}
 
 public class Snake : MonoBehaviour
 {
@@ -21,7 +27,9 @@ public class Snake : MonoBehaviour
         Pause
     }
 
+    private const float MAX_SPEED = 0.4f;
     private State state;
+    private PowerUp powerUp;
     private Vector2Int gridPosition;
     private Direction gridMoveDirection;
     private float gridMoveTimer;
@@ -32,21 +40,20 @@ public class Snake : MonoBehaviour
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
     public GameObject gameOverController;
-    public Snake() {
-        snakeBodySize = 3;
-        snakeMovePositionList = new List<SnakeMovePosition>();
-        snakeBodyList = new List<SnakeBodyPart>();
-    }
+    
     public void LevelGridSetup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
     }
     private void Awake()
     {
-        
+        snakeBodySize = 3;
+        snakeMovePositionList = new List<SnakeMovePosition>();
+        snakeBodyList = new List<SnakeBodyPart>();
         InitPosition();
         gameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.snakeHeadSprite;
         state = State.Alive;
+        powerUp = PowerUp.None;
     }
 
     private void Update()
@@ -54,8 +61,7 @@ public class Snake : MonoBehaviour
         switch (state)
         {
             case State.Alive:
-                HandleInput();
-                HandleGridMovement();
+                HandleCoreAction();
                 break;
             case State.Dead:
                 break;
@@ -64,7 +70,11 @@ public class Snake : MonoBehaviour
         }
         
     }
-
+    private void HandleCoreAction() 
+    {
+        HandleInput();
+        HandleGridMovement();
+    }
     private void HandleGridMovement()
     {
         gridMoveTimer += Time.deltaTime;
@@ -80,14 +90,33 @@ public class Snake : MonoBehaviour
             gridPosition += gridMoveDirectionVector;
             gridPosition = levelGrid.ValidateGridPosition(gridPosition);
 
+            //Power took
+            if (powerUp == PowerUp.None)
+            {
+                powerUp = levelGrid.IsSnakeTookPower(gridPosition);
+                switch (powerUp)
+                {
+                    case PowerUp.Shield:
+                        SetPowerShield();
+                        break;
+                    case PowerUp.ScoreBoost:
+                        SetPowerScoreBoost();
+                        break;
+
+                    case PowerUp.SpeedUp:
+                        SetPowerSpeedUp();
+                        break;
+                }
+            }
+
             //Food taken & increase size
             if (levelGrid.IsSnakeTookFood(gridPosition))
             {
                 snakeBodySize++;
                 CreateSnakeBodyPart();
-                scoreController.AddScore(10);
+                scoreController.AddScore(powerUp==PowerUp.ScoreBoost ? 50 : 10);
             }
-          
+           
             gridMoveTimer -= gridMoveTimeMax;
 
             if (snakeMovePositionList.Count >= snakeBodySize + 1 )
@@ -101,14 +130,18 @@ public class Snake : MonoBehaviour
 
             UpdateSnakeBodyParts();
 
-            foreach (SnakeBodyPart snakeBodyPart in snakeBodyList)
+            if (powerUp != PowerUp.Shield)
             {
-                Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
-                if (gridPosition == snakeBodyPartGridPosition)
+                Debug.Log(powerUp);
+                foreach (SnakeBodyPart snakeBodyPart in snakeBodyList)
                 {
-                    Debug.Log("Game Over");
-                    state = State.Dead;
-                    gameOverController.SetActive(true);
+                    Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
+                    if (gridPosition == snakeBodyPartGridPosition)
+                    {
+                        Debug.Log("Game Over");
+                        state = State.Dead;
+                        gameOverController.SetActive(true);
+                    }
                 }
             }
         }
@@ -179,7 +212,7 @@ public class Snake : MonoBehaviour
     private void InitPosition()
     {
         gridPosition = new Vector2Int(16, 9);
-        gridMoveTimeMax = 0.4f;
+        gridMoveTimeMax = MAX_SPEED;
         gridMoveTimer = gridMoveTimeMax;
         gridMoveDirection = Direction.Right;
     }
@@ -219,6 +252,58 @@ public class Snake : MonoBehaviour
     {
         state = State.Alive;
     }
+
+    public void SetPowerShield(float delay = 10)
+    {
+        powerUp = PowerUp.Shield;
+      
+        foreach (var part in snakeBodyList)
+        {
+            part.SetGlowBodyPart(powerUp);
+        }
+        StartCoroutine(ResetPowerAfterDelay(delay));
+    }
+    public void SetPowerScoreBoost(float delay = 10)
+    {
+        powerUp = PowerUp.ScoreBoost;
+        foreach (var part in snakeBodyList)
+        {
+            part.SetGlowBodyPart(powerUp);
+        }
+        StartCoroutine(ResetPowerAfterDelay(delay));
+    }
+    public void SetPowerSpeedUp(float delay = 10)
+    {
+        powerUp = PowerUp.SpeedUp;
+        gridMoveTimeMax = 0.2f;
+        foreach (var part in snakeBodyList)
+        {
+            part.SetGlowBodyPart(powerUp);
+        }
+        StartCoroutine(ResetPowerAfterDelay(delay));
+    }
+    public void ResetPower()
+    {
+        powerUp = PowerUp.None;
+        gridMoveTimeMax = MAX_SPEED;
+        foreach (var part in snakeBodyList)
+        {
+            part.SetGlowBodyPart(powerUp);
+        }
+        if(powerUp == PowerUp.None)
+        StartCoroutine(ShowPowerAfterDelay(16));
+    }
+
+    private IEnumerator ResetPowerAfterDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        ResetPower();
+    }
+    private IEnumerator ShowPowerAfterDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        levelGrid.SpawnPower();
+    }
     private class SnakeMovePosition
     {
         private Vector2Int gridPosition;
@@ -237,12 +322,12 @@ public class Snake : MonoBehaviour
     {
         private SnakeMovePosition snakeMovePosition;
         private Transform transform;
-
+        private SpriteRenderer spriteRenderer;
         public SnakeBodyPart(int bodyIndex)
         {
             var snakeBody = new GameObject("SnakeBody", typeof(SpriteRenderer));
-
-            snakeBody.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.bodySprite;
+            spriteRenderer = snakeBody.GetComponent<SpriteRenderer>();
+            spriteRenderer.sprite = GameAssets.Instance.bodySprite;
             //snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -1 - bodyIndex;
             snakeBody.layer = 1;
             transform = snakeBody.transform;
@@ -266,6 +351,27 @@ public class Snake : MonoBehaviour
                 return snakeMovePosition.GridPosition;
             return new Vector2Int();
         }
+
+        public void SetGlowBodyPart(PowerUp powerType) 
+        {
+            switch (powerType)
+            {
+                case PowerUp.ScoreBoost:
+                    spriteRenderer.color = new Color(0, 0, 255);
+                    break;
+                case PowerUp.Shield:
+                    spriteRenderer.color = new Color(0, 255, 0);
+                    break;
+                case PowerUp.SpeedUp:
+                    spriteRenderer.color = new Color(255, 0, 0);
+                    break;
+                case PowerUp.None:
+                    spriteRenderer.color = new Color(255, 255, 255);
+                    break;
+            }
+        }
+
+       
     }
 }
 

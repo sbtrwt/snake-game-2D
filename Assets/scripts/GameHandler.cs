@@ -28,10 +28,11 @@ public class GameHandler : MonoBehaviour
     }
     private void Start()
     {
-        snake = new Snake();
         InitLevelGrid();
         InitSnake();
+        levelGrid.SnakeSetup(snake);
         levelGrid.SpawnFood();
+        levelGrid.SpawnPower();
         resumeButton.onClick.AddListener(OnClickResume);
         pauseButton.onClick.AddListener(OnClickPause);
     }
@@ -48,7 +49,7 @@ public class GameHandler : MonoBehaviour
     private void InitLevelGrid() 
     {
         levelGrid = new LevelGrid(26, 16);
-        levelGrid.SnakeSetup(snake);
+       
     }
     private void InitSnake() {
         snakeHead = new GameObject();
