@@ -29,7 +29,7 @@ public class Snake : MonoBehaviour
     public ScoreController scoreController;
     public GameObject gameOverController;
     private PlayerType playerType;
-  
+    public GameObject snakeHead;
 
     private void Awake()
     {
@@ -222,7 +222,7 @@ public class Snake : MonoBehaviour
     }
     private void CreateSnakeBodyPart()
     {
-        var body = new SnakeBodyPart(snakeBodyList.Count);
+        var body = new SnakeBodyPart(snakeBodyList.Count, this);
         body.SetGlowBodyPart(powerUp);
         snakeBodyList.Add(body);
 
@@ -317,7 +317,31 @@ public class Snake : MonoBehaviour
         {
             CatchPower(other.GetComponent<Power>().PowerType);
         }
-            
+        if (other.CompareTag(GlobalConstant.SnakeTag))
+        {
+            Debug.Log("Inside snake : " + other.tag);
+            var snake = other.gameObject.GetComponent<Snake>();
+            if (snake != null)
+            {
+                //snake.SetSnakeDead();
+                //snake.DestroySnakeBody();
+            }
+        }
+    }
+
+    public void SetSnakeDead()
+    {
+        state = State.Dead;
+    }
+    public void DestroySnakeBody()
+    {
+        
+        foreach(var body in snakeBodyList)
+        {
+            body.DestroySnakeBody();
+        }
+        //Destroy(snakeHead);
+        snakeHead.SetActive(false);
     }
     private class SnakeMovePosition
     {
@@ -338,14 +362,23 @@ public class Snake : MonoBehaviour
         private SnakeMovePosition snakeMovePosition;
         private Transform transform;
         private SpriteRenderer spriteRenderer;
-        public SnakeBodyPart(int bodyIndex)
+        private GameObject snakeBody;
+        
+        public SnakeBodyPart(int bodyIndex, Snake parentSnake)
         {
-            var snakeBody = new GameObject("SnakeBody", typeof(SpriteRenderer));
+            snakeBody = new GameObject("SnakeBody", typeof(SpriteRenderer));
             spriteRenderer = snakeBody.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = GameAssets.Instance.bodySprite;
             //snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -1 - bodyIndex;
             snakeBody.layer = 1;
             transform = snakeBody.transform;
+            var collider2D =  snakeBody.AddComponent<CircleCollider2D>();
+            collider2D.radius = 0.5f;
+            collider2D.isTrigger = true;
+            snakeBody.tag = GlobalConstant.SnakeTag;
+         
+            //var snake = snakeBody.AddComponent<Snake>();
+            //snake = parentSnake;
         }
 
         public void SetSnakeMovePosition(SnakeMovePosition snakeMovePosition)
@@ -386,7 +419,10 @@ public class Snake : MonoBehaviour
             }
         }
 
-        
+        public void DestroySnakeBody() 
+        {
+            Destroy(snakeBody);
+        }
     }
 }
 

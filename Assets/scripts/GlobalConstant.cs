@@ -26,8 +26,8 @@ public class GlobalConstant
     public static string SnakeTag = "Snake";
     public static string FoodTag = "Food";
     public static string PowerTag = "Power";
-    public const int  MAX_WIDTH = 15;
-    public const int MAX_HEIGHT= 15;
+    public const int  MAX_WIDTH = 26;
+    public const int MAX_HEIGHT= 13;
     public const int MIN_WIDTH = 1;
     public const int MIN_HEIGHT = 1;
     public const int OVER_LAYER = 6;

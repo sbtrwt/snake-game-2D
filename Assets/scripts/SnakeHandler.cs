@@ -35,7 +35,7 @@ public class SnakeHandler : MonoBehaviour
     }
     private void InitLevelGrid() 
     {
-        levelGrid = new LevelGrid(26, 16);
+        levelGrid = new LevelGrid(GlobalConstant.MAX_WIDTH, GlobalConstant.MAX_HEIGHT);
        
     }
     private void InitSnake() {
@@ -44,13 +44,15 @@ public class SnakeHandler : MonoBehaviour
         SpriteRenderer snakeSpriteRenderer = snakeHead.AddComponent<SpriteRenderer>();
         snakeSpriteRenderer.sprite = GameAssets.Instance.snakeHeadSprite;
         snakeSpriteRenderer.color = playerColor;
-         snake =  snakeHead.AddComponent<Snake>() ;
+        snake =  snakeHead.AddComponent<Snake>() ;
         snake.LevelGridSetup(levelGrid);
         snake.scoreController = scoreController;
         snake.gameOverController = gameOverController;
         snake.SetSnakeType(playerType);
-        snakeHead.AddComponent<BoxCollider2D>();
-        snake.tag = "Snake";
+        snake.snakeHead = snakeHead;
+        var collider2D = snakeHead.AddComponent<CircleCollider2D>();
+        collider2D.radius = 0.5f;
+        snakeHead.tag = GlobalConstant.SnakeTag;
         var rigidbody2D =  snakeHead.AddComponent<Rigidbody2D>();
         rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
         rigidbody2D.simulated = true;
@@ -60,5 +62,10 @@ public class SnakeHandler : MonoBehaviour
     {
         if (snake == null) return null;
         return snake.GetFullSnakeGridPositionList();
+    }
+
+    public void DestroySnake()
+    {
+        Destroy(snakeHead);
     }
 }
