@@ -3,25 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PowerUp
-{
-    None,
-    Shield,
-    ScoreBoost,
-    SpeedUp
-}
-public enum Direction
-{
-    Left,
-    Right,
-    Up,
-    Down
-}
-public enum PlayerType
-{
-    One,
-    Two
-}
+
 public class Snake : MonoBehaviour
 {
     
@@ -33,20 +15,22 @@ public class Snake : MonoBehaviour
     }
 
     private const float MAX_SPEED = 0.4f;
+    private const float MAX_DELAY = 10f;
     private State state;
-    private PowerUp powerUp;
+    private PowerType powerUp;
     private Vector2Int gridPosition;
     private Direction gridMoveDirection;
     private float gridMoveTimer;
     private float gridMoveTimeMax;
-    [SerializeField] private LevelGrid levelGrid;
+    private LevelGrid levelGrid;
     private int snakeBodySize;
     private List<SnakeBodyPart> snakeBodyList;
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
     public GameObject gameOverController;
     private PlayerType playerType;
- 
+  
+
     private void Awake()
     {
         snakeBodySize = 3;
@@ -55,7 +39,7 @@ public class Snake : MonoBehaviour
         InitPosition();
         gameObject.GetComponent<SpriteRenderer>().sprite = GameAssets.Instance.snakeHeadSprite;
         state = State.Alive;
-        powerUp = PowerUp.None;
+        powerUp = PowerType.None;
         playerType = PlayerType.One;
     }
 
@@ -88,64 +72,46 @@ public class Snake : MonoBehaviour
         if (gridMoveTimer > gridMoveTimeMax)
         {
             Vector2Int gridMoveDirectionVector;
-           
+
             //Insert snake position
             snakeMovePositionList.Insert(0, new SnakeMovePosition(gridPosition, gridMoveDirection));
-           
+
             //Position increment
             gridMoveDirectionVector = GetMoveDirectionVector();
             gridPosition += gridMoveDirectionVector;
             gridPosition = levelGrid.ValidateGridPosition(gridPosition);
 
             //Power took
-            if (powerUp == PowerUp.None)
-            {
-                powerUp = levelGrid.IsSnakeTookPower(gridPosition);
-                switch (powerUp)
-                {
-                    case PowerUp.Shield:
-                        SetPowerShield();
-                        break;
-                    case PowerUp.ScoreBoost:
-                        SetPowerScoreBoost();
-                        break;
-
-                    case PowerUp.SpeedUp:
-                        SetPowerSpeedUp();
-                        break;
-                }
-            }
+            //CatchPower();
 
             //Food taken & increase size
-            if (levelGrid.IsSnakeTookFood(gridPosition))
-            {
-                snakeBodySize++;
-                CreateSnakeBodyPart();
-                scoreController.AddScore(powerUp==PowerUp.ScoreBoost ? 50 : 10);
-            }
-           
+            //if (levelGrid.IsSnakeTookFood(gridPosition))
+            //{
+            //    IncreaseSnakeSize();
+            //}
+
             gridMoveTimer -= gridMoveTimeMax;
 
-            if (snakeMovePositionList.Count >= snakeBodySize + 1 )
+            if (snakeMovePositionList.Count >= snakeBodySize + 1)
             {
                 snakeMovePositionList.RemoveAt(snakeMovePositionList.Count - 1);
             }
-           
+
 
             transform.position = new Vector3(gridPosition.x, gridPosition.y);
             transform.eulerAngles = new Vector3(0, 0, GetAngleFromVector(gridMoveDirectionVector) - 90);
 
             UpdateSnakeBodyParts();
 
-            if (powerUp != PowerUp.Shield)
+            if (powerUp != PowerType.Shield)
             {
-                Debug.Log(powerUp);
+                //Debug.Log(powerUp);
                 foreach (SnakeBodyPart snakeBodyPart in snakeBodyList)
                 {
                     Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
                     if (gridPosition == snakeBodyPartGridPosition)
                     {
-                        Debug.Log("Game Over");
+                        //Debug.Log("Game Over");
                         state = State.Dead;
                         gameOverController.SetActive(true);
                     }
@@ -153,9 +119,35 @@ public class Snake : MonoBehaviour
             }
         }
 
+
+
+
+    }
+
+    private void CatchPower(PowerType type )
+    {
+        powerUp = type;
+        switch (powerUp)
+        {
+            case PowerType.Shield:
+                SetPowerShield();
+                break;
+            case PowerType.ScoreBoost:
+                SetPowerScoreBoost();
+                break;
+
+            case PowerType.SpeedUp:
+                SetPowerSpeedUp();
+                break;
+        }
         
+    }
 
-
+    private void IncreaseSnakeSize()
+    {
+        snakeBodySize++;
+        CreateSnakeBodyPart();
+        scoreController.AddScore(powerUp == PowerType.ScoreBoost ? 50 : 10);
     }
 
     private Vector2Int GetMoveDirectionVector()
@@ -230,7 +222,10 @@ public class Snake : MonoBehaviour
     }
     private void CreateSnakeBodyPart()
     {
-        snakeBodyList.Add(new SnakeBodyPart(snakeBodyList.Count));
+        var body = new SnakeBodyPart(snakeBodyList.Count);
+        body.SetGlowBodyPart(powerUp);
+        snakeBodyList.Add(body);
+
     }
     private void UpdateSnakeBodyParts()
     {
@@ -260,9 +255,9 @@ public class Snake : MonoBehaviour
         state = State.Alive;
     }
 
-    public void SetPowerShield(float delay = 10)
+    public void SetPowerShield(float delay = MAX_DELAY)
     {
-        powerUp = PowerUp.Shield;
+        powerUp = PowerType.Shield;
       
         foreach (var part in snakeBodyList)
         {
@@ -270,18 +265,18 @@ public class Snake : MonoBehaviour
         }
         StartCoroutine(ResetPowerAfterDelay(delay));
     }
-    public void SetPowerScoreBoost(float delay = 10)
+    public void SetPowerScoreBoost(float delay = MAX_DELAY)
     {
-        powerUp = PowerUp.ScoreBoost;
+        powerUp = PowerType.ScoreBoost;
         foreach (var part in snakeBodyList)
         {
             part.SetGlowBodyPart(powerUp);
         }
         StartCoroutine(ResetPowerAfterDelay(delay));
     }
-    public void SetPowerSpeedUp(float delay = 10)
+    public void SetPowerSpeedUp(float delay = MAX_DELAY)
     {
-        powerUp = PowerUp.SpeedUp;
+        powerUp = PowerType.SpeedUp;
         gridMoveTimeMax = 0.2f;
         foreach (var part in snakeBodyList)
         {
@@ -291,14 +286,13 @@ public class Snake : MonoBehaviour
     }
     public void ResetPower()
     {
-        powerUp = PowerUp.None;
+        powerUp = PowerType.None;
         gridMoveTimeMax = MAX_SPEED;
         foreach (var part in snakeBodyList)
         {
             part.SetGlowBodyPart(powerUp);
         }
-        if(powerUp == PowerUp.None)
-        StartCoroutine(ShowPowerAfterDelay(16));
+       
     }
 
     private IEnumerator ResetPowerAfterDelay(float time)
@@ -306,15 +300,24 @@ public class Snake : MonoBehaviour
         yield return new WaitForSeconds(time);
         ResetPower();
     }
-    private IEnumerator ShowPowerAfterDelay(float time)
-    {
-        yield return new WaitForSeconds(time);
-        levelGrid.SpawnPower();
-    }
+   
 
     public void SetSnakeType(PlayerType type)
     {
         playerType = type;
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        //Debug.Log("Inside snake : "+ other.tag);
+        if (other.CompareTag(GlobalConstant.FoodTag))
+        {
+            IncreaseSnakeSize();
+        }
+        if (other.CompareTag(GlobalConstant.PowerTag))
+        {
+            CatchPower(other.GetComponent<Power>().PowerType);
+        }
+            
     }
     private class SnakeMovePosition
     {
@@ -364,26 +367,26 @@ public class Snake : MonoBehaviour
             return new Vector2Int();
         }
 
-        public void SetGlowBodyPart(PowerUp powerType) 
+        public void SetGlowBodyPart(PowerType powerType) 
         {
             switch (powerType)
             {
-                case PowerUp.ScoreBoost:
+                case PowerType.ScoreBoost:
                     spriteRenderer.color = new Color(0, 0, 255);
                     break;
-                case PowerUp.Shield:
+                case PowerType.Shield:
                     spriteRenderer.color = new Color(0, 255, 0);
                     break;
-                case PowerUp.SpeedUp:
+                case PowerType.SpeedUp:
                     spriteRenderer.color = new Color(255, 0, 0);
                     break;
-                case PowerUp.None:
+                case PowerType.None:
                     spriteRenderer.color = new Color(255, 255, 255);
                     break;
             }
         }
 
-       
+        
     }
 }
 

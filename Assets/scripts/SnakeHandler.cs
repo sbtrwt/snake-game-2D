@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameHandler : MonoBehaviour
+public class SnakeHandler : MonoBehaviour
 {
-    public static GameHandler Instance { get; private set; }
     [SerializeField] private LevelGrid levelGrid;
     [SerializeField] private GameObject snakeHead;
     [SerializeField] private Snake snake;
@@ -16,25 +15,11 @@ public class GameHandler : MonoBehaviour
     [SerializeField] private Button pauseButton;
     [SerializeField] private PlayerType playerType;
     [SerializeField] private Color playerColor;
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            //Destroy(gameObject);
-        }
-    }
     private void Start()
     {
         InitLevelGrid();
         InitSnake();
         levelGrid.SnakeSetup(snake);
-        levelGrid.SpawnFood();
-        levelGrid.SpawnPower();
         resumeButton.onClick.AddListener(OnClickResume);
         pauseButton.onClick.AddListener(OnClickPause);
     }
@@ -64,5 +49,16 @@ public class GameHandler : MonoBehaviour
         snake.scoreController = scoreController;
         snake.gameOverController = gameOverController;
         snake.SetSnakeType(playerType);
+        snakeHead.AddComponent<BoxCollider2D>();
+        snake.tag = "Snake";
+        var rigidbody2D =  snakeHead.AddComponent<Rigidbody2D>();
+        rigidbody2D.bodyType = RigidbodyType2D.Kinematic;
+        rigidbody2D.simulated = true;
+    }
+
+    public List<Vector2Int> GetFullSnakeGridPositionList() 
+    {
+        if (snake == null) return null;
+        return snake.GetFullSnakeGridPositionList();
     }
 }
