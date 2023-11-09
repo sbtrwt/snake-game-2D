@@ -4,8 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - snake
-  - food
+  - Snake
+  - Food
+  - Power
   layers:
   - Default
   - TransparentFX
