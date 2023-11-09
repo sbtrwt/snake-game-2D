@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +26,7 @@ public class Snake : MonoBehaviour
     private List<SnakeBodyPart> snakeBodyList;
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
-    public GameObject gameOverController;
+    //public GameObject gameOverController;
     private PlayerType playerType;
     public GameObject snakeHead;
 
@@ -112,8 +111,9 @@ public class Snake : MonoBehaviour
                     if (gridPosition == snakeBodyPartGridPosition)
                     {
                         //Debug.Log("Game Over");
+                        SoundManager.Instance.Play(SoundType.SnakeDeath);
                         state = State.Dead;
-                        gameOverController.SetActive(true);
+                        UIController.Instance.gameOverController.SetActive(true);
                     }
                 }
             }
@@ -210,7 +210,7 @@ public class Snake : MonoBehaviour
 
     private void InitPosition()
     {
-        gridPosition = new Vector2Int(16, 9);
+        gridPosition = new Vector2Int(Random.Range(GlobalConstant.MIN_WIDTH, GlobalConstant.MAX_WIDTH), Random.Range(GlobalConstant.MIN_HEIGHT, GlobalConstant.MAX_HEIGHT));
         gridMoveTimeMax = MAX_SPEED;
         gridMoveTimer = gridMoveTimeMax;
         gridMoveDirection = Direction.Right;
@@ -311,20 +311,23 @@ public class Snake : MonoBehaviour
         //Debug.Log("Inside snake : "+ other.tag);
         if (other.CompareTag(GlobalConstant.FoodTag))
         {
+            SoundManager.Instance.Play(SoundType.FoodCollect);
             IncreaseSnakeSize();
         }
         if (other.CompareTag(GlobalConstant.PowerTag))
         {
+            SoundManager.Instance.Play(SoundType.PowerCollect);
             CatchPower(other.GetComponent<Power>().PowerType);
         }
         if (other.CompareTag(GlobalConstant.SnakeTag))
         {
             Debug.Log("Inside snake : " + other.tag);
-            var snake = other.gameObject.GetComponent<Snake>();
-            if (snake != null)
+            var snakeBody = other.gameObject.GetComponent<SnakeBody>();
+            if (snakeBody != null && snakeBody.snake != this)
             {
-                //snake.SetSnakeDead();
-                //snake.DestroySnakeBody();
+                SoundManager.Instance.Play(SoundType.SnakeDeath);
+                snakeBody.snake.SetSnakeDead();
+               StartCoroutine( snakeBody.snake.DestroySnakeBody());
             }
         }
     }
@@ -333,15 +336,16 @@ public class Snake : MonoBehaviour
     {
         state = State.Dead;
     }
-    public void DestroySnakeBody()
+    public IEnumerator DestroySnakeBody()
     {
-        
-        foreach(var body in snakeBodyList)
+       
+        foreach (var body in snakeBodyList)
         {
             body.DestroySnakeBody();
+            yield return null;
         }
-        //Destroy(snakeHead);
-        snakeHead.SetActive(false);
+        Destroy(snakeHead);
+        
     }
     private class SnakeMovePosition
     {
@@ -376,9 +380,10 @@ public class Snake : MonoBehaviour
             collider2D.radius = 0.5f;
             collider2D.isTrigger = true;
             snakeBody.tag = GlobalConstant.SnakeTag;
-         
-            //var snake = snakeBody.AddComponent<Snake>();
-            //snake = parentSnake;
+
+            var snakebody = snakeBody.AddComponent<SnakeBody>();
+            snakebody.snakeHead = parentSnake.snakeHead;
+            snakebody.snake = parentSnake;
         }
 
         public void SetSnakeMovePosition(SnakeMovePosition snakeMovePosition)
@@ -402,6 +407,7 @@ public class Snake : MonoBehaviour
 
         public void SetGlowBodyPart(PowerType powerType) 
         {
+            if(spriteRenderer != null)
             switch (powerType)
             {
                 case PowerType.ScoreBoost:

@@ -23,12 +23,13 @@ public enum PlayerType
 }
 public class GlobalConstant 
 {
-    public static string SnakeTag = "Snake";
-    public static string FoodTag = "Food";
-    public static string PowerTag = "Power";
+    public const string SnakeTag = "Snake";
+    public const string FoodTag = "Food";
+    public const string PowerTag = "Power";
     public const int  MAX_WIDTH = 26;
     public const int MAX_HEIGHT= 13;
     public const int MIN_WIDTH = 1;
     public const int MIN_HEIGHT = 1;
     public const int OVER_LAYER = 6;
+    public const string SnakeHead = "SnakeHead";
 }
