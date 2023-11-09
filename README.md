@@ -8,7 +8,7 @@ The 2D platformer game where snake can eat doughnut and grow and grow. It will d
 - Food will grow size of snake
 - Powers
   - Green doughnut    : Shield for 10 seconds
-  - Sugar crystal     : Score increase with 50for 10 seconds
+  - Sugar crystal     : Score increase with 50 for 10 seconds
   - Pizza             : Speed up movement for 10 seconds
 - Players can eat each other and other will be out from game
   
