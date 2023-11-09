@@ -24,5 +24,8 @@ The 2D platformer game where snake can eat doughnut and grow and grow. It will d
 ### GamePlay
 
 
-https://github.com/sbtrwt/snake-game-2D/assets/5724149/472a4f3d-1112-40fc-b206-677cb43fa8b8
+
+https://github.com/sbtrwt/snake-game-2D/assets/5724149/fe721bc8-3769-494d-b46c-4aecaf782351
+
+
 
