@@ -5,14 +5,15 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public static GameObject gameOverController;
+    public static UIController Instance { get; private set; }
+    public GameObject gameOverController;
     [SerializeField] private GameObject resumeController;
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button soundButton;
     private void Awake()
     {
-        Debug.Log("UI script in awake event");
+        if (Instance == null) Instance = this;
     }
     private void Start()
     {

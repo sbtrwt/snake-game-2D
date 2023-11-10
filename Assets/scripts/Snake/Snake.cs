@@ -100,10 +100,10 @@ public class Snake : MonoBehaviour
                     Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
                     if (gridPosition == snakeBodyPartGridPosition)
                     {
-                        //Debug.Log("Game Over");
+                        
                         SoundManager.Instance.Play(SoundType.SnakeDeath);
                         state = State.Dead;
-                        UIController.gameOverController.SetActive(true);
+                        UIController.Instance.gameOverController.SetActive(true);
                     }
                 }
             }
