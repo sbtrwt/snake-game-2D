@@ -7,41 +7,29 @@ public class FoodSpawner : MonoBehaviour
     public static FoodSpawner Instance { get; private set; }
     private Vector2Int foodGridPosition;
     private GameObject foodGameObject;
-     private int maxWidth = GlobalConstant.MAX_WIDTH;
-     private int maxHeight = GlobalConstant.MAX_HEIGHT;
-     private int minWidth = GlobalConstant.MIN_WIDTH;
-     private int minHeight = GlobalConstant.MIN_HEIGHT;
+    
     [SerializeField] private SnakeHandler[] snakeHandlers;
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
     }
-
     private void Start()
     {
         StartCoroutine(SpawnFoodAfterDelay(0));
     }
     public void SpawnFood()
     {
-        if(snakeHandlers != null)
+        if (snakeHandlers != null)
         {
             List<Vector2Int> allSnakeFullBody = new List<Vector2Int>();
-            foreach(var s in snakeHandlers)
+            foreach (var s in snakeHandlers)
             {
                 allSnakeFullBody.AddRange(s.GetFullSnakeGridPositionList());
             }
             do
             {
-                foodGridPosition = new Vector2Int(Random.Range(minWidth, maxWidth), Random.Range(minHeight, maxHeight));
+                foodGridPosition = new Vector2Int(Random.Range(GlobalConstant.MIN_WIDTH, GlobalConstant.MAX_WIDTH), Random.Range(GlobalConstant.MIN_HEIGHT, GlobalConstant.MAX_HEIGHT));
             } while (allSnakeFullBody.IndexOf(foodGridPosition) != -1);
         }
 

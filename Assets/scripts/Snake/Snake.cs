@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Snake : MonoBehaviour
 {
-    
+
     private enum State
     {
         Alive,
@@ -26,7 +26,7 @@ public class Snake : MonoBehaviour
     private List<SnakeBodyPart> snakeBodyList;
     private List<SnakeMovePosition> snakeMovePositionList;
     public ScoreController scoreController;
-    //public GameObject gameOverController;
+
     private PlayerType playerType;
     public GameObject snakeHead;
 
@@ -54,13 +54,13 @@ public class Snake : MonoBehaviour
             case State.Pause:
                 break;
         }
-        
+
     }
     public void LevelGridSetup(LevelGrid levelGrid)
     {
         this.levelGrid = levelGrid;
     }
-    private void HandleCoreAction() 
+    private void HandleCoreAction()
     {
         HandleInput();
         HandleGridMovement();
@@ -80,15 +80,6 @@ public class Snake : MonoBehaviour
             gridPosition += gridMoveDirectionVector;
             gridPosition = levelGrid.ValidateGridPosition(gridPosition);
 
-            //Power took
-            //CatchPower();
-
-            //Food taken & increase size
-            //if (levelGrid.IsSnakeTookFood(gridPosition))
-            //{
-            //    IncreaseSnakeSize();
-            //}
-
             gridMoveTimer -= gridMoveTimeMax;
 
             if (snakeMovePositionList.Count >= snakeBodySize + 1)
@@ -104,7 +95,6 @@ public class Snake : MonoBehaviour
 
             if (powerUp != PowerType.Shield)
             {
-                //Debug.Log(powerUp);
                 foreach (SnakeBodyPart snakeBodyPart in snakeBodyList)
                 {
                     Vector2Int snakeBodyPartGridPosition = snakeBodyPart.GetGridPosition();
@@ -113,18 +103,14 @@ public class Snake : MonoBehaviour
                         //Debug.Log("Game Over");
                         SoundManager.Instance.Play(SoundType.SnakeDeath);
                         state = State.Dead;
-                        UIController.Instance.gameOverController.SetActive(true);
+                        UIController.gameOverController.SetActive(true);
                     }
                 }
             }
         }
-
-
-
-
     }
 
-    private void CatchPower(PowerType type )
+    private void CatchPower(PowerType type)
     {
         powerUp = type;
         switch (powerUp)
@@ -140,7 +126,7 @@ public class Snake : MonoBehaviour
                 SetPowerSpeedUp();
                 break;
         }
-        
+
     }
 
     private void IncreaseSnakeSize()
@@ -173,31 +159,31 @@ public class Snake : MonoBehaviour
             {
                 gridMoveDirection = Direction.Up;
             }
-            //gridPosition.y += 1;
+          
         }
-        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.DownArrow : KeyCode.S ))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.DownArrow : KeyCode.S))
         {
             if (Direction.Up != gridMoveDirection)
             {
                 gridMoveDirection = Direction.Down;
             }
-            //gridPosition.y -= 1;
+           
         }
-        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.LeftArrow : KeyCode.A ))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.LeftArrow : KeyCode.A))
         {
             if (Direction.Right != gridMoveDirection)
             {
                 gridMoveDirection = Direction.Left;
             }
-            //gridPosition.x -= 1;
+           
         }
-        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.RightArrow : KeyCode.D ))
+        if (Input.GetKeyDown(playerType == PlayerType.One ? KeyCode.RightArrow : KeyCode.D))
         {
             if (Direction.Left != gridMoveDirection)
             {
                 gridMoveDirection = Direction.Right;
             }
-            //gridPosition.x += 1;
+          
         }
     }
 
@@ -229,24 +215,25 @@ public class Snake : MonoBehaviour
     }
     private void UpdateSnakeBodyParts()
     {
-        for(int i =0; i< snakeBodyList.Count; i++)
+        for (int i = 0; i < snakeBodyList.Count; i++)
         {
             snakeBodyList[i].SetGridPosition(snakeMovePositionList[i]);
         }
     }
-   
 
-    public List<Vector2Int> GetFullSnakeGridPositionList(){
+
+    public List<Vector2Int> GetFullSnakeGridPositionList()
+    {
         List<Vector2Int> gridPositionList = new List<Vector2Int>() { gridPosition };
-        foreach(var position in snakeMovePositionList)
+        foreach (var position in snakeMovePositionList)
         {
             gridPositionList.Add(position.GridPosition);
         }
-        //gridPositionList.AddRange(snakeBodyList);
+      
         return gridPositionList;
     }
 
-    public void SetPause() 
+    public void SetPause()
     {
         state = State.Pause;
     }
@@ -258,7 +245,7 @@ public class Snake : MonoBehaviour
     public void SetPowerShield(float delay = MAX_DELAY)
     {
         powerUp = PowerType.Shield;
-      
+
         foreach (var part in snakeBodyList)
         {
             part.SetGlowBodyPart(powerUp);
@@ -292,7 +279,7 @@ public class Snake : MonoBehaviour
         {
             part.SetGlowBodyPart(powerUp);
         }
-       
+
     }
 
     private IEnumerator ResetPowerAfterDelay(float time)
@@ -300,7 +287,7 @@ public class Snake : MonoBehaviour
         yield return new WaitForSeconds(time);
         ResetPower();
     }
-   
+
 
     public void SetSnakeType(PlayerType type)
     {
@@ -308,7 +295,7 @@ public class Snake : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //Debug.Log("Inside snake : "+ other.tag);
+      
         if (other.CompareTag(GlobalConstant.FoodTag))
         {
             SoundManager.Instance.Play(SoundType.FoodCollect);
@@ -327,7 +314,7 @@ public class Snake : MonoBehaviour
             {
                 SoundManager.Instance.Play(SoundType.SnakeDeath);
                 snakeBody.snake.SetSnakeDead();
-               StartCoroutine( snakeBody.snake.DestroySnakeBody());
+                StartCoroutine(snakeBody.snake.DestroySnakeBody());
             }
         }
     }
@@ -338,14 +325,14 @@ public class Snake : MonoBehaviour
     }
     public IEnumerator DestroySnakeBody()
     {
-       
+
         foreach (var body in snakeBodyList)
         {
             body.DestroySnakeBody();
             yield return null;
         }
         Destroy(snakeHead);
-        
+
     }
     private class SnakeMovePosition
     {
@@ -367,16 +354,16 @@ public class Snake : MonoBehaviour
         private Transform transform;
         private SpriteRenderer spriteRenderer;
         private GameObject snakeBody;
-        
+
         public SnakeBodyPart(int bodyIndex, Snake parentSnake)
         {
             snakeBody = new GameObject("SnakeBody", typeof(SpriteRenderer));
             spriteRenderer = snakeBody.GetComponent<SpriteRenderer>();
             spriteRenderer.sprite = GameAssets.Instance.bodySprite;
-            //snakeBody.GetComponent<SpriteRenderer>().sortingOrder = -1 - bodyIndex;
+          
             snakeBody.layer = 1;
             transform = snakeBody.transform;
-            var collider2D =  snakeBody.AddComponent<CircleCollider2D>();
+            var collider2D = snakeBody.AddComponent<CircleCollider2D>();
             collider2D.radius = 0.5f;
             collider2D.isTrigger = true;
             snakeBody.tag = GlobalConstant.SnakeTag;
@@ -400,32 +387,32 @@ public class Snake : MonoBehaviour
 
         public Vector2Int GetGridPosition()
         {
-            if(snakeMovePosition != null)
+            if (snakeMovePosition != null)
                 return snakeMovePosition.GridPosition;
             return new Vector2Int();
         }
 
-        public void SetGlowBodyPart(PowerType powerType) 
+        public void SetGlowBodyPart(PowerType powerType)
         {
-            if(spriteRenderer != null)
-            switch (powerType)
-            {
-                case PowerType.ScoreBoost:
-                    spriteRenderer.color = new Color(0, 0, 255);
-                    break;
-                case PowerType.Shield:
-                    spriteRenderer.color = new Color(0, 255, 0);
-                    break;
-                case PowerType.SpeedUp:
-                    spriteRenderer.color = new Color(255, 0, 0);
-                    break;
-                case PowerType.None:
-                    spriteRenderer.color = new Color(255, 255, 255);
-                    break;
-            }
+            if (spriteRenderer != null)
+                switch (powerType)
+                {
+                    case PowerType.ScoreBoost:
+                        spriteRenderer.color = new Color(0, 0, 255);
+                        break;
+                    case PowerType.Shield:
+                        spriteRenderer.color = new Color(0, 255, 0);
+                        break;
+                    case PowerType.SpeedUp:
+                        spriteRenderer.color = new Color(255, 0, 0);
+                        break;
+                    case PowerType.None:
+                        spriteRenderer.color = new Color(255, 255, 255);
+                        break;
+                }
         }
 
-        public void DestroySnakeBody() 
+        public void DestroySnakeBody()
         {
             Destroy(snakeBody);
         }

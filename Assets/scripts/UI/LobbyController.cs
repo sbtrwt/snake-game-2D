@@ -27,6 +27,6 @@ public class LobbyController : MonoBehaviour
     }
     private void OnClickExit()
     {
-        //Application.Clos();
+        Application.Quit();
     }
 }

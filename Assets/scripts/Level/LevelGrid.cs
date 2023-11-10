@@ -15,8 +15,6 @@ public class LevelGrid
     {
         this.width = width;
         this.height = height;
-        //Debug.Log("level started");
-       
     }
     public void SnakeSetup(Snake snake)
     {

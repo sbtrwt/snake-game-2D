@@ -7,24 +7,12 @@ public class PowerSpawner : MonoBehaviour
     public static PowerSpawner Instance { get; private set; }
     private Vector2Int powerGridPosition;
     private GameObject powerGameObject;
-    private int maxWidth = GlobalConstant.MAX_WIDTH;
-    private int maxHeight = GlobalConstant.MAX_HEIGHT;
-    private int minWidth = GlobalConstant.MIN_WIDTH;
-    private int minHeight = GlobalConstant.MIN_HEIGHT;
+
     [SerializeField] private SnakeHandler[] snakeHandlers;
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
     }
-
     private void Start()
     {
         StartCoroutine(SpawnFoodAfterDelay(3));
@@ -40,7 +28,7 @@ public class PowerSpawner : MonoBehaviour
             }
             do
             {
-                powerGridPosition = new Vector2Int(Random.Range(minWidth, maxWidth), Random.Range(minHeight, maxHeight));
+                powerGridPosition = new Vector2Int(Random.Range(GlobalConstant.MIN_WIDTH, GlobalConstant.MAX_WIDTH), Random.Range(GlobalConstant.MIN_HEIGHT, GlobalConstant.MAX_HEIGHT));
             } while (allSnakeFullBody.IndexOf(powerGridPosition) != -1);
         }
      

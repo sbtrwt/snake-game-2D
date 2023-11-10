@@ -5,27 +5,19 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public static UIController Instance { get; private set; }
-    public GameObject gameOverController;
+    public static GameObject gameOverController;
     [SerializeField] private GameObject resumeController;
     [SerializeField] private Button resumeButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button soundButton;
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            //Destroy(gameObject);
-        }
+        Debug.Log("UI script in awake event");
     }
     private void Start()
     {
-        if(resumeButton != null)
+        Debug.Log("UI script in start event");
+        if (resumeButton != null)
             resumeButton.onClick.AddListener(OnClickResume);
         if (pauseButton != null)
             pauseButton.onClick.AddListener(OnClickPause);
