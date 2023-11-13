@@ -300,7 +300,6 @@ namespace Snake2D
         }
         private void OnTriggerEnter2D(Collider2D other)
         {
-
             if (other.CompareTag(GlobalConstant.FoodTag))
             {
                 SoundManager.Instance.Play(SoundType.FoodCollect);
@@ -313,7 +312,7 @@ namespace Snake2D
             }
             if (other.CompareTag(GlobalConstant.SnakeTag))
             {
-                Debug.Log("Inside snake : " + other.tag);
+               
                 var snakeBody = other.gameObject.GetComponent<SnakeBody>();
                 if (snakeBody != null && snakeBody.snake != this)
                 {
