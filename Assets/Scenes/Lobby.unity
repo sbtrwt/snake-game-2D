@@ -354,6 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6d4f4c7f3035cc43a23c1f6031e1c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverController: {fileID: 0}
   resumeController: {fileID: 0}
   resumeButton: {fileID: 0}
   pauseButton: {fileID: 0}

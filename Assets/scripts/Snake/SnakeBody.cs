@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SnakeBody : MonoBehaviour
+namespace Snake2D
 {
-    public GameObject snakeHead;
-    public Snake snake;
-    
+    public class SnakeBody : MonoBehaviour
+    {
+        public GameObject snakeHead;
+        public Snake snake;
+    }
 }

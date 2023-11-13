@@ -4,29 +4,32 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LobbyController : MonoBehaviour
+namespace Snake2D.UI
 {
-    public Button singleButton;
-    public Button coOpButton;
-    public Button exitButton;
+    public class LobbyController : MonoBehaviour
+    {
+        public Button singleButton;
+        public Button coOpButton;
+        public Button exitButton;
 
-    private void Awake()
-    {
-        singleButton.onClick.AddListener(OnClickSingle);
-        coOpButton.onClick.AddListener(OnClickCoOp);
-        exitButton.onClick.AddListener(OnClickExit);
-    }
+        private void Awake()
+        {
+            singleButton.onClick.AddListener(OnClickSingle);
+            coOpButton.onClick.AddListener(OnClickCoOp);
+            exitButton.onClick.AddListener(OnClickExit);
+        }
 
-    private void OnClickSingle()
-    {
-        SceneManager.LoadScene(1);
-    }
-    private void OnClickCoOp()
-    {
-        SceneManager.LoadScene(2);
-    }
-    private void OnClickExit()
-    {
-        Application.Quit();
+        private void OnClickSingle()
+        {
+            SceneManager.LoadScene(1);
+        }
+        private void OnClickCoOp()
+        {
+            SceneManager.LoadScene(2);
+        }
+        private void OnClickExit()
+        {
+            Application.Quit();
+        }
     }
 }
