@@ -5,25 +5,25 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverController : MonoBehaviour
+namespace Snake2D.UI
 {
-    public Button singleButton;
-    public Button lobbyButton;
-
-
-    private void Awake()
+    public class GameOverController : MonoBehaviour
     {
-        singleButton.onClick.AddListener(OnClickSingle);
-        lobbyButton.onClick.AddListener(OnClickLobby);
-    }
-
-    private void OnClickSingle()
-    {
-        Scene scene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(scene.buildIndex);
-    }
-    private void OnClickLobby()
-    {
-        SceneManager.LoadScene(0);
+        public Button singleButton;
+        public Button lobbyButton;
+        private void Awake()
+        {
+            singleButton.onClick.AddListener(OnClickSingle);
+            lobbyButton.onClick.AddListener(OnClickLobby);
+        }
+        private void OnClickSingle()
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(scene.buildIndex);
+        }
+        private void OnClickLobby()
+        {
+            SceneManager.LoadScene(0);
+        }
     }
 }

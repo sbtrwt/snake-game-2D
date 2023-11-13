@@ -2,25 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
-public class ScoreController : MonoBehaviour
+namespace Snake2D.UI
 {
-    [SerializeField] private TextMeshProUGUI scoreText;
-    [SerializeField] private int score;
-    private void Awake()
+    public class ScoreController : MonoBehaviour
     {
-        score = 0;
-        scoreText = GetComponent<TextMeshProUGUI>();
-        RefreshUI();
-    }
+        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private int score;
+        private void Awake()
+        {
+            score = 0;
+            scoreText = GetComponent<TextMeshProUGUI>();
+            RefreshUI();
+        }
 
-    public void AddScore(int score) {
-        this.score += score;
-        RefreshUI();
-    }
+        public void AddScore(int score)
+        {
+            this.score += score;
+            RefreshUI();
+        }
 
-    private void RefreshUI()
-    {
-        scoreText.text = score.ToString();
+        private void RefreshUI()
+        {
+            scoreText.text = score.ToString();
+        }
     }
 }

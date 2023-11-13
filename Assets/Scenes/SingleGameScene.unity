@@ -627,6 +627,8 @@ MonoBehaviour:
   scoreController: {fileID: 1358053615}
   playerType: 0
   playerColor: {r: 1, g: 0.98490566, b: 0.98490566, a: 1}
+  snakePrefab: {fileID: 2862412679254459113, guid: ddcba4e3499aacd4dad010adffd9e755, type: 3}
+  snakeBodyPrefab: {fileID: 4694651696175882387, guid: 39b80c20a63f62f47a1232dea4f03de3, type: 3}
 --- !u!4 &1328530635
 Transform:
   m_ObjectHideFlags: 0
@@ -1448,6 +1450,18 @@ PrefabInstance:
       value: PowerSpawner
       objectReference: {fileID: 0}
     - target: {fileID: 4699211360802227582, guid: cf6fd4c5fe22dc942bd58a6c2ccab162, type: 3}
+      propertyPath: powerBoostPrefab
+      value: 
+      objectReference: {fileID: 671158816581078588, guid: 8cb00999eee350c44b486975d18cdf9f, type: 3}
+    - target: {fileID: 4699211360802227582, guid: cf6fd4c5fe22dc942bd58a6c2ccab162, type: 3}
+      propertyPath: powerSpeedPrefab
+      value: 
+      objectReference: {fileID: 4250824314662323066, guid: 6b41447913c02624ca809c961630e2b0, type: 3}
+    - target: {fileID: 4699211360802227582, guid: cf6fd4c5fe22dc942bd58a6c2ccab162, type: 3}
+      propertyPath: powerShieldPrefab
+      value: 
+      objectReference: {fileID: 8029251977483539684, guid: 400255a03968c8047b14c835a89a63ae, type: 3}
+    - target: {fileID: 4699211360802227582, guid: cf6fd4c5fe22dc942bd58a6c2ccab162, type: 3}
       propertyPath: 'snakeHandlers.Array.data[0]'
       value: 
       objectReference: {fileID: 1328530634}
@@ -1738,6 +1752,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6337107627370003161, guid: 82627762433c39142ad49998198ad43b, type: 3}
+      propertyPath: foodPrefab
+      value: 
+      objectReference: {fileID: 6385005452545705388, guid: 403c93904bf352f4894ad28e29939af2, type: 3}
     - target: {fileID: 6337107627370003161, guid: 82627762433c39142ad49998198ad43b, type: 3}
       propertyPath: 'snakeHandlers.Array.data[0]'
       value: 

@@ -2,49 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Snake2D.Sound;
 
-public class UIController : MonoBehaviour
+namespace Snake2D.UI
 {
-    public static UIController Instance { get; private set; }
-    public GameObject gameOverController;
-    [SerializeField] private GameObject resumeController;
-    [SerializeField] private Button resumeButton;
-    [SerializeField] private Button pauseButton;
-    [SerializeField] private Button soundButton;
-    private void Awake()
+    public class UIController : MonoBehaviour
     {
-        if (Instance == null)
+        public static UIController Instance { get; private set; }
+        public GameObject gameOverController;
+        [SerializeField] private GameObject resumeController;
+        [SerializeField] private Button resumeButton;
+        [SerializeField] private Button pauseButton;
+        [SerializeField] private Button soundButton;
+        private void Awake()
         {
-            Instance = this;
-            //DontDestroyOnLoad(gameObject);
+            if (Instance == null) Instance = this;
         }
-        else
+        private void Start()
         {
-            //Destroy(gameObject);
+            if (resumeButton != null)
+                resumeButton.onClick.AddListener(OnClickResume);
+            if (pauseButton != null)
+                pauseButton.onClick.AddListener(OnClickPause);
+            if (soundButton != null)
+                soundButton.onClick.AddListener(OnClickSound);
         }
-    }
-    private void Start()
-    {
-        if(resumeButton != null)
-            resumeButton.onClick.AddListener(OnClickResume);
-        if (pauseButton != null)
-            pauseButton.onClick.AddListener(OnClickPause);
-        if (soundButton != null)
-            soundButton.onClick.AddListener(OnClickSound);
-    }
-    private void OnClickResume()
-    {
-        resumeController.SetActive(false);
-        Time.timeScale = 1;
-    }
-    private void OnClickPause()
-    {
-        resumeController.SetActive(true);
-        Time.timeScale = 0;
-    }
+        private void OnClickResume()
+        {
+            resumeController.SetActive(false);
+            Time.timeScale = 1;
+        }
+        private void OnClickPause()
+        {
+            resumeController.SetActive(true);
+            Time.timeScale = 0;
+        }
 
-    private void OnClickSound()
-    {
-        SoundManager.Instance.ToggleMusic();
+        private void OnClickSound()
+        {
+            SoundManager.Instance.ToggleMusic();
+        }
     }
 }

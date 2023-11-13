@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Power : MonoBehaviour
+namespace Snake2D.PowerUp
 {
-    public PowerType PowerType { get; set; }
-    private void OnTriggerEnter2D(Collider2D other)
+    public class Power : MonoBehaviour
     {
-        Debug.Log("Inside food : " + other.tag);
-        if (other.CompareTag(GlobalConstant.SnakeTag))
+        public PowerType PowerType { get; set; }
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            PowerSpawner.Instance.DestroyPower();
+            if (other.CompareTag(GlobalConstant.SnakeTag))
+            {
+                PowerSpawner.Instance.DestroyPower();
+            }
         }
     }
 }

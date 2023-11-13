@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7989f2876f896d428e06910a5fc6955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerShieldPrefab: {fileID: 8029251977483539684, guid: 400255a03968c8047b14c835a89a63ae, type: 3}
+  powerBoostPrefab: {fileID: 671158816581078588, guid: 8cb00999eee350c44b486975d18cdf9f, type: 3}
+  powerSpeedPrefab: {fileID: 4250824314662323066, guid: 6b41447913c02624ca809c961630e2b0, type: 3}
   snakeHandlers:
   - {fileID: 0}

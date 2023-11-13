@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Food : MonoBehaviour
+namespace Snake2D.Food
 {
-   
-    private void OnTriggerEnter2D(Collider2D other)
+    public class Food : MonoBehaviour
     {
-        Debug.Log("Inside food : " + other.tag);
-        if (other.CompareTag(GlobalConstant.SnakeTag))
+
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            FoodSpawner.Instance.DestroyFood();
+            if (other.CompareTag(GlobalConstant.SnakeTag))
+            {
+                FoodSpawner.Instance.DestroyFood();
+            }
         }
     }
 }
